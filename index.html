@@ -26,14 +26,26 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    backdrop-filter: brightness(0.7);
+}
+
+/* Overlay for romantic dark tone */
+.cover::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.35);
 }
 
 /* Text */
+h1, .date, button {
+    position: relative;
+    z-index: 2;
+}
+
 h1 {
     font-family: 'Playfair Display', serif;
     font-size: 3rem;
-    margin: 0;
 }
 
 .date {
@@ -60,7 +72,7 @@ button:hover {
     background: rgba(255,255,255,0.4);
 }
 
-/* Particles */
+/* Canvas */
 canvas {
     position: absolute;
     top: 0;
@@ -83,7 +95,6 @@ canvas {
 <div class="cover">
     <h1>Risto & Anastasia</h1>
     <div class="date">August 03, 2024</div>
-
     <button onclick="toggleMusic()">Play Music</button>
 </div>
 
@@ -92,8 +103,10 @@ canvas {
 </audio>
 
 <script>
-// MUSIC
+// MUSIC CONTROL
 let playing = false;
+let particlesActive = false;
+
 const music = document.getElementById("music");
 const button = document.querySelector("button");
 
@@ -102,10 +115,12 @@ function toggleMusic() {
         music.play();
         button.innerText = "Stop Music";
         playing = true;
+        particlesActive = true;
     } else {
         music.pause();
         button.innerText = "Play Music";
         playing = false;
+        particlesActive = false;
     }
 }
 
@@ -118,30 +133,34 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
-for (let i = 0; i < 60; i++) {
+for (let i = 0; i < 80; i++) {
     particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 2,
-        dx: Math.random() - 0.5,
-        dy: Math.random() - 0.5
+        r: Math.random() * 2 + 0.5,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3
     });
 }
 
 function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "rgba(255,255,255,0.8)";
 
     particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
 
-        p.x += p.dx;
-        p.y += p.dy;
+        // MOVE ONLY WHEN MUSIC IS PLAYING
+        if (particlesActive) {
+            p.x += p.dx;
+            p.y += p.dy;
 
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            // soft floating bounce
+            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        }
     });
 
     requestAnimationFrame(draw);

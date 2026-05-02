@@ -1,26 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Wedding</title>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Risto & Anastasia</title>
 
-    <!-- AUDIO -->
-        <!-- Audio -->
-    <div class="audio-player">
-      <audio controls="" autoplay="" loop="">
-        <source src="song.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-    </div>
+  <!-- Premium elegant fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
-  <script>
-    function playSong() {
-      const song = document.getElementById("song");
-      song.play();
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background:#000;
+      color:#fff;
+      overflow-x:hidden;
     }
-  </script>
+
+    .hero {
+      height:100vh;
+      background:url('cover.jpg') center/cover no-repeat;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      position:relative;
+    }
+
+    .overlay {
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2));
+    }
+
+    .hero-content {
+      position:relative;
+      z-index:2;
+      animation:fadeIn 2s ease;
+      padding:20px;
+    }
+
+    h1 {
+      font-family:'Cormorant Garamond', serif;
+      font-size:clamp(3rem, 8vw, 5rem);
+      font-weight:600;
+      letter-spacing:2px;
+    }
+
+    .date {
+      margin-top:12px;
+      font-size:1rem;
+      letter-spacing:4px;
+      text-transform:uppercase;
+      opacity:0.9;
+    }
+
+    .play-btn {
+      margin-top:40px;
+      padding:14px 36px;
+      border:1px solid rgba(255,255,255,0.6);
+      background:transparent;
+      color:#fff;
+      font-weight:400;
+      letter-spacing:2px;
+      border-radius:40px;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+      transition:0.4s ease;
+    }
+
+    .play-btn:hover {
+      background:white;
+      color:black;
+      transform:translateY(-2px);
+    }
+
+    /* Minimal NFC-style player */
+    .player {
+      position:fixed;
+      bottom:15px;
+      left:50%;
+      transform:translateX(-50%);
+      width:85%;
+      max-width:360px;
+      background:rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.2);
+      border-radius:12px;
+      padding:10px;
+      display:none;
+      align-items:center;
+      gap:10px;
+      backdrop-filter:blur(10px);
+    }
+
+    .progress {
+      flex:1;
+      height:3px;
+      background:rgba(255,255,255,0.2);
+      border-radius:10px;
+      overflow:hidden;
+    }
+
+    .progress-bar {
+      height:100%;
+      width:0%;
+      background:white;
+      transition:width 0.2s linear;
+    }
+
+    /* Floating subtle particles (more premium than hearts) */
+    .particle {
+      position:absolute;
+      bottom:-10px;
+      width:6px;
+      height:6px;
+      background:rgba(255,255,255,0.5);
+      border-radius:50%;
+      animation:floatUp 8s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform:translateY(0); opacity:0; }
+      10% { opacity:0.7; }
+      100% { transform:translateY(-100vh); opacity:0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(20px);} 
+      to { opacity:1; transform:translateY(0);} 
+    }
+
+    @media(max-width:600px){
+      h1 { font-size:2.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="overlay"></div>
+
+  <div class="hero-content">
+    <h1>Risto & Anastasia</h1>
+    <div class="date">August 03, 2024</div>
+    <button class="play-btn" onclick="startMusic()">Play</button>
+  </div>
+</section>
+
+<div class="player" id="player">
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+</div>
+
+<audio id="audio" src="song.mp3"></audio>
+
+<script>
+  const audio = document.getElementById('audio');
+  const player = document.getElementById('player');
+  const progressBar = document.getElementById('progressBar');
+
+  function startMusic() {
+    audio.play();
+    player.style.display = 'flex';
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressBar.style.width = percent + '%';
+  });
+
+  // subtle particles (classy effect for NFC reveal)
+  setInterval(() => {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (6 + Math.random() * 4) + 's';
+    document.body.appendChild(p);
+
+    setTimeout(() => p.remove(), 10000);
+  }, 400);
+</script>
 
 </body>
 </html>

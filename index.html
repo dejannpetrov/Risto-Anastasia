@@ -2,77 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Our Wedding</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Open+Sans&display=swap" rel="stylesheet">
+  <title>Our Wedding</title>
 
   <style>
     body {
       margin: 0;
-      font-family: 'Open Sans', sans-serif;
+      font-family: "Georgia", serif;
       background: #f8f5f2;
       color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       text-align: center;
     }
 
-    .container {
-      padding: 40px 20px;
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 350px;
+      width: 90%;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 20px;
     }
 
     h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 42px;
-      margin-bottom: 10px;
+      margin: 10px 0;
+      font-size: 26px;
     }
 
-    .date {
-      font-size: 18px;
-      margin-bottom: 30px;
+    p {
+      margin: 5px 0 20px;
       color: #777;
     }
 
-    .cover {
-      max-width: 320px;
-      width: 90%;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+    button {
+      background: #c9a96e;
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
     }
 
-    .audio-player {
-      margin-top: 20px;
-    }
-
-    footer {
-      margin-top: 50px;
-      font-size: 14px;
-      color: #aaa;
+    button:hover {
+      background: #b8965f;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="container">
+  <div class="card">
+    <!-- COVER IMAGE -->
+    <img src="cover.jpg" alt="Wedding Photo">
+
+    <!-- NAMES -->
     <h1>Risto & Anastasia</h1>
-    <div class="date">August 03, 2024</div>
 
-    <!-- Cover Image -->
-    <img src="1-1129,jpg" alt="Wedding Cover" class="cover">
+    <!-- DATE -->
+    <p>August 03 2024</p>
 
-    <!-- Audio -->
-    <div class="audio-player">
-      <audio controls autoplay loop>
-        <source src="song.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-    </div>
+    <!-- AUDIO -->
+    <audio id="song">
+      <source src="song.mp3" type="audio/mpeg">
+    </audio>
 
-    <footer>
-      We can't wait to celebrate with you ❤️
-    </footer>
+    <button onclick="playSong()">Play Our Song</button>
   </div>
+
+  <script>
+    function playSong() {
+      const song = document.getElementById("song");
+      song.play();
+    }
+  </script>
 
 </body>
 </html>

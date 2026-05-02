@@ -43,19 +43,6 @@
       color: #777;
     }
 
-    button {
-      background: #c9a96e;
-      border: none;
-      color: white;
-      padding: 12px 25px;
-      font-size: 16px;
-      border-radius: 30px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #b8965f;
-    }
   </style>
 </head>
 
@@ -72,11 +59,14 @@
     <p>August 03 2024</p>
 
     <!-- AUDIO -->
-    <audio id="song">
-      <source src="song.mp3" type="audio/mpeg">
-    </audio>
+        <!-- Audio -->
+    <div class="audio-player">
+      <audio controls="" autoplay="" loop="">
+        <source src="song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
 
-    <button onclick="playSong()">Play Our Song</button>
   </div>
 
   <script>

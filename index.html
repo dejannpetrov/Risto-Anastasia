@@ -5,151 +5,190 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Risto & Anastasia</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
 <style>
-body {
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+    background: #000;
+    color: white;
     overflow: hidden;
-    font-family: Arial, sans-serif;
 }
 
-/* Canvas always visible */
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 0;
-}
-
-/* Content on top */
-.cover {
+.container {
     position: relative;
-    z-index: 2;
-    width: 100%;
     height: 100vh;
-    background: url('1-1129.jpg');
-    background-repeat: no-repeat;
+    width: 100%;
+}
+
+/* COVER IMAGE */
+.cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.7);
+}
+
+/* OVERLAY CONTENT */
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
-    background-position: center 30%;
+    text-align: center;
+
+    padding: 20px;
 }
 
-/* Dark overlay */
-.cover::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-    z-index: 1;
+/* TEXT */
+.names {
+    font-family: 'Great Vibes', cursive;
+    font-size: 42px;
+    margin-bottom: 10px;
 }
 
-h1, .date, button {
-    z-index: 2;
+.date {
+    font-size: 16px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
 }
 
-h1 {
-    font-size: 2.5rem;
-}
-
+/* BUTTON */
 button {
-    margin-top: 20px;
-    padding: 10px 20px;
+    padding: 12px 28px;
     border: none;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.3);
-    color: white;
-    font-size: 1rem;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.9);
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: 0.3s;
+}
+
+button:hover {
+    background: white;
+}
+
+/* PARTICLES */
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 430px) {
+    .names {
+        font-size: 34px;
+    }
+    .date {
+        font-size: 14px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="particles"></canvas>
+<div class="container">
+    <!-- CHANGE IMAGE HERE -->
+    <img src="1-1129.jpg" class="cover">
 
-<div class="cover">
-    <h1>Risto & Anastasia</h1>
-    <div class="date">August 03, 2024</div>
-    <button onclick="toggleMusic()">Play Music</button>
+    <canvas id="particles"></canvas>
+
+    <div class="overlay">
+        <div class="names">Risto & Anastasia</div>
+        <div class="date">August 03, 2024</div>
+
+        <button id="musicBtn">Play Music</button>
+    </div>
 </div>
 
-<audio id="music" loop>
-    <source src="song.mp3" type="audio/mp3">
-</audio>
+<!-- CHANGE SONG HERE -->
+<audio id="music" src="song.mp3"></audio>
 
 <script>
+const btn = document.getElementById("musicBtn");
+const music = document.getElementById("music");
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-// PARTICLES
 let particles = [];
-for (let i = 0; i < 100; i++) {
-    particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        dx: (Math.random() - 0.5) * 1,
-        dy: (Math.random() - 0.5) * 1,
-        size: Math.random() * 2 + 1
-    });
+let playing = false;
+
+/* CREATE PARTICLES */
+function createParticles() {
+    particles = [];
+    for (let i = 0; i < 80; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: canvas.height + Math.random() * 200,
+            size: Math.random() * 2,
+            speed: Math.random() * 1 + 0.5
+        });
+    }
 }
 
-let active = false;
-
-// DRAW LOOP
-function animate() {
+/* DRAW */
+function drawParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "white";
 
     particles.forEach(p => {
+        if (playing) {
+            p.y -= p.speed;
+            if (p.y < 0) {
+                p.y = canvas.height;
+                p.x = Math.random() * canvas.width;
+            }
+        }
+
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-
-        if (active) {
-            p.x += p.dx;
-            p.y += p.dy;
-
-            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-        }
     });
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(drawParticles);
 }
-animate();
 
-// MUSIC CONTROL
-const music = document.getElementById("music");
-const button = document.querySelector("button");
+createParticles();
+drawParticles();
 
-let playing = false;
-
-function toggleMusic() {
+/* BUTTON LOGIC */
+btn.addEventListener("click", () => {
     if (!playing) {
-        music.play().catch(() => {
-            alert("Tap again to start music (iPhone restriction)");
-        });
-        active = true;
-        button.innerText = "Stop Music";
+        music.play();
         playing = true;
+        btn.textContent = "Stop Music";
     } else {
         music.pause();
-        active = false;
-        button.innerText = "Play Music";
         playing = false;
+        btn.textContent = "Play Music";
     }
-}
+});
+
+/* RESIZE FIX */
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    createParticles();
+});
 </script>
 
 </body>
